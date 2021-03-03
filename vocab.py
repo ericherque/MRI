@@ -1,15 +1,16 @@
 import json
 import os
 import numpy as np
+import math
 from nltk.tokenize import RegexpTokenizer
 from nltk.stem.porter import *
 
-directory = "cacm/split/tokenize/"
-antidicofile = "cacm/common_words"
+directory = "../cacm/split/tokenize/"
+antidicofile = "../cacm/common_words"
 
-outpath = "cacm/filtrage/"
+outpath = "../cacm/filtrage/"
 
-jsonpath = "cacm/"
+jsonpath = "../cacm/"
 
 dico = {}
 antidico = {}
@@ -19,7 +20,7 @@ dico_idfi = {}
 
 list_tfid = []
 dico_vecto = {}
-
+dico_norme = {}
 indexinversedico = {}
 
 
@@ -79,9 +80,10 @@ def vocab(path):
                 vocabulaire[word] = 1
 
         # on écrit le fichier vocab de sortie
-        h = open(path + "vocabulaire.json", "w+")
-        for i in vocabulaire:
-            h.write(i + "\n")
+        jsonfile = open(jsonpath + "vocabulaire.json", "w+")
+        jsonobject = json.dumps(vocabulaire, indent=4)
+        jsonfile.write(jsonobject)
+        jsonfile.close()
 
 
 def dfi(path):
@@ -99,7 +101,7 @@ def dfi(path):
         samefile = False
 
     jsonobject = json.dumps(vocabulaire, indent=4)
-    jsonfile = open(path + "vocabulaire.json", "w+")
+    jsonfile = open(jsonpath + "vocabulaire.json", "w+")
     jsonfile.write(jsonobject)
 
 
@@ -149,7 +151,7 @@ def vecto():
     for i in range(1,3205):
         #on déclare le dico_doc ici pour le reset à chaque fois
         dico_doc = {}
-#### FAIRE A L'ENVERS
+        sum_carre = 0
         # itération pour chaque terme de la liste de liste
         for j in range(len(list_tfid)):
             triplet = list_tfid[j]
@@ -157,34 +159,16 @@ def vecto():
             if triplet[0] == i:
                 w = triplet[2] * dico_idfi[triplet[1]] * 1
                 dico_doc[triplet[1]] = w
-
+                sum_carre += w*w
+        dico_norme["CACM-"+str(i)] = math.sqrt(sum_carre)
         #on range le dictionnaire du i-ème doc dans le dictionnaire de dictionnaire
-        dico_vecto["CACM_" + str(i)] = dico_doc
+        dico_vecto["CACM-" + str(i)] = dico_doc
 
-    print(dico_vecto['CACM_1'])
-    print(dico_vecto['CACM_2439'])
+        json_object = json.dumps(dico_norme, indent=4)
+        vocabFile = open(jsonpath + "norme.json", "w")
+        vocabFile.write(json_object)
+        vocabFile.close()
 
-
-def vectobis():
-    for word in
-    print(" début vecto")
-    # itération pour chaque numéro de document
-    for i in range(1, 3205):
-        # on déclare le dico_doc ici pour le reset à chaque fois
-        dico_doc = {}
-        # itération pour chaque terme de la liste de liste
-        for j in range(len(list_tfid)):
-            triplet = list_tfid[j]
-            # si le triplet appartient au même document, on traite
-            if triplet[0] == i:
-                w = triplet[2] * dico_idfi[triplet[1]] * 1
-                dico_doc[triplet[1]] = w
-
-        # on range le dictionnaire du i-ème doc dans le dictionnaire de dictionnaire
-        dico_vecto["CACM_" + str(i)] = dico_doc
-
-    print(dico_vecto['CACM_1'])
-    print(dico_vecto['CACM_2439'])
 
 
 def indexinverse():
