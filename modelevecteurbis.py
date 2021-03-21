@@ -6,7 +6,6 @@ from nltk.stem.porter import *
 import math
 from operator import itemgetter
 import numpy as np
-import operator
 
 vocabpath = "../cacm/vocabulaire.json"
 normepath = "../cacm/norme.json"
@@ -63,7 +62,7 @@ def request_loop():
         res_partiel = {}
         for word in request_tab:
 
-            #res_score = {}
+            res_score = {}
             if dict_indexinverse.get(word) is not None:
                 dico_terme = dict_indexinverse[word]
                 for i in range(len(dico_terme)):
@@ -73,34 +72,28 @@ def request_loop():
                     for numdoc, value in dico_terme_doc.items():
                         # produit scalaire ?
                         score = value * dico_vec_req[word]
-                        if numdoc in res_partiel:
-                            res_partiel[numdoc] += score
-                        else:
-                            res_partiel[numdoc] = score
-
                         # stockage (doc, score)
-                        #res_score[numdoc] = score
-            #if word in res_partiel:
-                #res_partiel[word] += res_score
-            #else:
-                #res_partiel[word] = res_score
+                        res_score[numdoc] = score
+            if word in res_partiel:
+                res_partiel[word] += res_score
+            else:
+                res_partiel[word] = res_score
 
         res = {}
-        for numdoc in res_partiel:
-            # modif des valeurs de res par /(norme de d * norme de q)
-            res[numdoc] = res_partiel[numdoc] / (dict_norme[numdoc] * norme_req)
+        new_values = {}
+        for word in res_partiel:
+            word_scores = res_partiel[word]
+            for numdoc in word_scores:
+                # modif des valeurs de res par /(norme de d * norme de q)
+                new_values[numdoc] = word_scores[numdoc] / (dict_norme[numdoc] * norme_req)
+            res[word] = new_values
 
-        # tri ordre décroissant
-        sorted_d = dict(sorted(res.items(), key=operator.itemgetter(1), reverse=True))
-
-        # K premiers resultats
-        # k = 4
-        resultat_requete = list(sorted_d.items())[:4]
+        # tri ordre croissant
 
         print(res_partiel)
+        print(res_partiel["goal"])
         print(res)
-        print (sorted_d)
-        print(resultat_requete)
+        print(res["goal"])
 
 
 
