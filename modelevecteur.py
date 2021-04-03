@@ -26,6 +26,7 @@ def request_loop():
     dict_indexinverse = json.load(fii)
     fii.close()
 
+    ## Boucle de traitement des requêtes
     while(True):
         ## recup input user
         request = str(input("Enter request: "))
@@ -33,7 +34,7 @@ def request_loop():
         ## creation list de mots de la request
         request_tab = request.split(" ")
 
-        #calcule du tfi dans dico_vocab_req
+        ## calcul du tfi dans dico_vocab_req
         dico_vocab_req = {}
         for word in request_tab :
             if word not in dico_vocab_req :
@@ -41,29 +42,27 @@ def request_loop():
             else :
                 dico_vocab_req[word] += 1
 
-        #calcul du idf dans dico_idf_req
+        ## calcul du idf dans dico_idf_req
         dico_idfi_req = {}
-        N = len(dico_vocab_req)
+        N = 3204
         for word in dico_vocab_req :
             dico_idfi_req[word] = np.log(N/dico_vocab_req[word])
 
-        #calcul du vecteur de la requete
+        ## calcul du vecteur de la requete
         dico_vec_req = {}
         for word in dico_vocab_req :
             dico_vec_req[word] = dico_idfi_req[word]*dico_vocab_req[word]
 
-        #calcul de la norme de la requete
+        ## calcul de la norme de la requete
         sum_carre = 0
         for word in dico_vec_req :
             sum_carre += pow(dico_vec_req[word], 2)
         norme_req = math.sqrt(sum_carre)
 
 
-        #Traitement de la requete calcule de res_partiel
+        ## traitement de la requete calcul de res_partiel
         res_partiel = {}
         for word in request_tab:
-
-            #res_score = {}
             if dict_indexinverse.get(word) is not None:
                 dico_terme = dict_indexinverse[word]
                 for i in range(len(dico_terme)):
@@ -77,31 +76,22 @@ def request_loop():
                             res_partiel[numdoc] += score
                         else:
                             res_partiel[numdoc] = score
-
-                        # stockage (doc, score)
-                        #res_score[numdoc] = score
-            #if word in res_partiel:
-                #res_partiel[word] += res_score
-            #else:
-                #res_partiel[word] = res_score
-
+        ## res final
         res = {}
         for numdoc in res_partiel:
-            # modif des valeurs de res par /(norme de d * norme de q)
+            ## modif des valeurs de res par /(norme de d * norme de q)
             res[numdoc] = res_partiel[numdoc] / (dict_norme[numdoc] * norme_req)
 
-        # tri ordre décroissant
+        ## tri ordre décroissant
         sorted_d = dict(sorted(res.items(), key=operator.itemgetter(1), reverse=True))
 
         # K premiers resultats
         # k = 4
         resultat_requete = list(sorted_d.items())[:4]
 
-        print(res_partiel)
-        print(res)
-        print (sorted_d)
-        print(resultat_requete)
-
+        ## affichage res
+        for elt in resultat_requete:
+            print(elt)
 
 
 request_loop()
