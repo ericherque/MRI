@@ -3,7 +3,7 @@ from nltk.tokenize import RegexpTokenizer
 import numpy as np
 import matplotlib.pyplot as plt
 
-directory = "cacm/split/tokenize/"
+directory = "../cacm/split/tokenize/"
 dico = {}
 
 def freq_apparition(path) :
@@ -42,35 +42,41 @@ def occur_number(dico):
     print(res)
     return res
 
+def lambda_theorique(dico):
+    # M
+    a = occur_number(dico)
+    print("number of total occurences: ", a)
+    # M_y
+    b = len(dico)
+    print("numbers of words: ", b)
+
+    # lambda = M / ln(M_y)
+    lambdaa = a / (np.log(b))
+    print("theorical lambda value: ", lambdaa)
+
+def plot_zipf():
+    tab_rang = [None] * 10956
+    tab_occur_plot = [None] * 10956
+    tab_occur = sorted(dico.items(), key=lambda x: x[1], reverse=True)
+
+    print("debut du plot: ")
+
+    for i in range(10955):
+        # print(i)
+        tab_rang[i] = i
+        tab_occur_plot[i] = tab_occur[i][1]
+
+    plt.plot(tab_rang, tab_occur_plot)
+
+    # plt.plot([1,2,3],[13000, 10000, 6800])
+    plt.plot()
+    plt.show()
 
 freq_apparition(directory)
 # tri_dico(dico)
 display_top_10(dico)
+lambda_theorique(dico)
+plot_zipf()
 
-# M
-a = occur_number(dico)
-print("number of total occurences: ", a)
-# M_y
-b = len(dico)
-print("numbers of words: ", b)
 
-# lambda = M / ln(M_y)
-lambdaa = a/(np.log(b))
-print("theorical lambda value: ", lambdaa)
 
-tab_rang = [None]*10956
-tab_occur_plot = [None]*10956
-tab_occur = sorted(dico.items(), key=lambda x: x[1], reverse=True)
-
-print("debut du plot: ")
-
-for i in range(10955):
-    # print(i)
-    tab_rang[i] = i
-    tab_occur_plot[i] = tab_occur[i][1]
-
-plt.plot(tab_rang, tab_occur_plot)
-
-# plt.plot([1,2,3],[13000, 10000, 6800])
-plt.plot()
-plt.show()

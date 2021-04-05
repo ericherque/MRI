@@ -190,7 +190,7 @@ def indexinverse():
     json_object = json.dumps(indexinversedico, indent=4)
     vocabFile = open(jsonpath+"indexinverse.json", "w")
     vocabFile.write(json_object)
-    vocabFile.close()
+    vocabFile.close(
 
 # filtrage: on applique l'antidico + on tronque les termes (racine)
 filtrage(antidicofile, directory)
