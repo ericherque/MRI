@@ -8,9 +8,15 @@ from operator import itemgetter
 import numpy as np
 import operator
 
-vocabpath = "../cacm/vocabulaire.json"
-normepath = "../cacm/norme.json"
-indexinversepath = "../cacm/indexinverse.json"
+# définir le chemin où on sotcke les fichiers json issu du TP précédent
+#vocabpath = "../cacm/vocabulaire.json"
+#normepath = "../cacm/norme.json"
+#indexinversepath = "../cacm/indexinverse.json"
+
+# fichiers json fournis par nous même
+vocabpath = "json/vocabulaire.json"
+normepath = "json/norme.json"
+indexinversepath = "json/indexinverse.json"
 
 def request_loop():
     ## chargement vocab

@@ -193,18 +193,18 @@ def indexinverse():
     vocabFile.close(
 
 # filtrage: on applique l'antidico + on tronque les termes (racine)
-filtrage(antidicofile, directory)
+filtrage(antidicofile, directory),
 # compte les occurences des termes tronqués
-vocab(outpath)
+vocab(outpath),
 
 # occurences des termes tronqués par fichiers dans vocabulaire.json
-dfi(outpath)
+dfi(outpath),
 
 # print(vocabulaire)
 
 # question 4'
 # print(idfi())
-idfi()
+idfi(),
 ########################################################################
 # caractérisation du terme dans le document
 # ptf = tf_ti
@@ -219,9 +219,8 @@ idfi()
 # vectorisation: on traite pour chaque documents chaque mots
 
 
-list_tf(outpath)
+list_tf(outpath),
 
-vecto()
+vecto(),
 
-indexinverse()
-print(indexinversedico)
+indexinverse(),
